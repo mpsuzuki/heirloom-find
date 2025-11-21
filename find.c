@@ -37,6 +37,10 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #if __GNUC__ >= 3 && __GNUC_MINOR__ >= 4 || __GNUC__ >= 4
 #define	USED	__attribute__ ((used))
 #elif defined __GNUC__
@@ -69,24 +73,27 @@ static const char sccsid[] USED = "@(#)find.sl	1.45 (gritter) 5/8/06";
 #include <errno.h>
 #include <locale.h>
 #include <signal.h>
-#if defined (SUS) || defined (SU3)
+#if defined (SUS) || defined (SU3) || defined(HAVE_FNMATCH_H)
 #include <fnmatch.h>
 #endif
-#if defined (__linux__) || defined (_AIX) || defined (__hpux)
+#if defined (__linux__) || defined (_AIX) || defined (__hpux) || defined(HAVE_MNTENT_H)
 #include <mntent.h>
 #endif
 #if defined (__FreeBSD__) || defined (__NetBSD__) || defined (__OpenBSD__) || \
-	defined (__DragonFly__) || defined (__APPLE__)
+	defined (__DragonFly__) || defined (__APPLE__) || defined(HAVE_SYS_PARAM_H)
 #include <sys/param.h>
+#endif
+#if defined (__FreeBSD__) || defined (__NetBSD__) || defined (__OpenBSD__) || \
+	defined (__DragonFly__) || defined (__APPLE__) || defined(HAVE_SYS_MOUNT_H)
 #include <sys/mount.h>
 #endif
-#ifdef	_AIX
+#if defined(_AIX) || defined(HAVE_SYS_SYSMACROS_H)
 #include <sys/sysmacros.h>
 #endif
-#ifndef	major
+#if !defined(major) && defined(HAVE_SYS_MKDEV_H)
 #include <sys/mkdev.h>
 #endif
-#if __NetBSD_Version__>= 300000000
+#if (__NetBSD_Version__>= 300000000) || defined(HAVE_SYS_STATVFS_H)
 #include <sys/statvfs.h>
 #define statfs statvfs
 #endif
