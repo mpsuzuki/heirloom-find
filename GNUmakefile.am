@@ -1,0 +1,24 @@
+EXTRA_DIST = \
+	find.1 Makefile.mk \
+	autogen.sh
+
+bin_PROGRAMS = find
+
+find_SOURCES = find.c
+
+libcommon_prefix  = @libcommon_prefix@
+libcommon_include = @libcommon_include@
+libcommon_lib     = @libcommon_lib@
+
+find_CPPFLAGS = -I$(libcommon_include)
+find_LDFLAGS  = -L$(libcommon_lib)
+find_LDADD    = -lcommon
+
+included_libcommon = heirloom-libcommon
+if BUILD_LIBCOMMON
+  OPT_LIBCOMMON = $(included_libcommon)
+  # find_CPPFLAGS += -I$(libcommon_lib) # to include wrap-sigset.h
+endif
+
+SUBDIRS = $(OPT_LIBCOMMON)
+DIST_SUBDIRS = $(included_libcommon)
